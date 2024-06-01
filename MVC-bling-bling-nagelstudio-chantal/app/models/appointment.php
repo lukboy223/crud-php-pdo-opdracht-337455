@@ -45,9 +45,9 @@ class Appointment
                                     )
                 VALUES              (
                         :Kleur1,
-                                        :Kleur2,
-                                        :Kleur3,
-                                        :Kleur4,
+                                    :Kleur2,
+                                    :Kleur3,
+                                    :Kleur4,
                                     :Tel,
                                     :Email,
                                     :Datum,
@@ -61,7 +61,75 @@ class Appointment
         $this->db->bind(':Kleur2', strval($post['Kleur2']), PDO::PARAM_STR);
         $this->db->bind(':Kleur3', strval($post['Kleur3']), PDO::PARAM_STR);
         $this->db->bind(':Kleur4', strval($post['Kleur4']), PDO::PARAM_STR);
-       
+
+        $this->db->bind(':Tel', $post['Tel'], PDO::PARAM_INT);
+        $this->db->bind(':Email', $post['Email'], PDO::PARAM_STR);
+        $this->db->bind(':Datum', $post['Datum'], PDO::PARAM_STR);
+        if (array_key_exists('Soort1', $post)) {
+            $this->db->bind(':Soort1', $post['Soort1'], PDO::PARAM_STR);
+        } else {
+
+            $this->db->bind(':Soort1', 'false', PDO::PARAM_STR);
+        }
+        if (array_key_exists('Soort2', $post)) {
+            $this->db->bind(':Soort2', $post['Soort2'], PDO::PARAM_STR);
+        } else {
+
+            $this->db->bind(':Soort2', "false", PDO::PARAM_STR);
+        }
+        if (array_key_exists('Soort3', $post)) {
+
+            $this->db->bind(':Soort3', $post['Soort3'], PDO::PARAM_STR);
+        } else {
+
+            $this->db->bind(':Soort3', 'false', PDO::PARAM_STR);
+        }
+        $this->db->execute();
+    }
+    public function selectAppointment($AppointmentId)
+    {
+        $sql = "SELECT Id
+        ,Kleur1
+        ,Kleur2
+        ,Kleur3
+        ,Kleur4
+        ,Tel
+        ,Email
+        ,Datum
+        ,Soort1
+        ,Soort2
+        ,Soort3
+        FROM  afspraak
+        WHERE Id = :id";
+        $this->db->query($sql);
+        $this->db->bind(':id', $AppointmentId, PDO::PARAM_INT);
+        return $this->db->single();
+    }
+
+
+    public function updateAppointment($post, $AppointmentId)
+    {
+        $sql = "UPDATE afspraak
+        SET
+        Kleur1 = :Kleur1,
+        Kleur2 = :Kleur2,
+        Kleur3 = :Kleur3,
+        Kleur4 = :Kleur4,
+        Tel = :Tel,
+        Email = :Email,
+        Datum = :Datum,
+        Soort1 = :Soort1,
+        Soort2 = :Soort2,
+        Soort3 = :Soort3
+        WHERE Id = :Id";
+
+        $this->db->query($sql);
+        $this->db->bind(':Id', $AppointmentId, PDO::PARAM_INT);
+        $this->db->bind(':Kleur1', strval($post['Kleur1']), PDO::PARAM_STR);
+        $this->db->bind(':Kleur2', strval($post['Kleur2']), PDO::PARAM_STR);
+        $this->db->bind(':Kleur3', strval($post['Kleur3']), PDO::PARAM_STR);
+        $this->db->bind(':Kleur4', strval($post['Kleur4']), PDO::PARAM_STR);
+
         $this->db->bind(':Tel', $post['Tel'], PDO::PARAM_INT);
         $this->db->bind(':Email', $post['Email'], PDO::PARAM_STR);
         $this->db->bind(':Datum', $post['Datum'], PDO::PARAM_STR);

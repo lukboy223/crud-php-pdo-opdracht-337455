@@ -44,6 +44,8 @@ class Appointments extends BaseController
             <td>$data->Email</td>
             <td>$data->Datum</td>
             <td>$soort</td>
+            <td><a href='" . URLROOT . "/appointments/update/$data->Id'>Update</a></td>
+            <td><a href='" . URLROOT . "/appointments/delete/$data->Id'>Delete</a></td>
             </tr>";
         }
         //gives the data to the next page
@@ -74,5 +76,28 @@ class Appointments extends BaseController
         ];
 
         $this->view('appointments/create', $data);
+    }
+    public function update($appointmentID){
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $result = $this->appointmentModel->updateAppointment($_POST, $appointmentID);
+            echo "Updated";
+            header('Refresh:1'. URLROOT . '/Appointments/index');
+        }
+        $result = $this->appointmentModel->selectAppointment($appointmentID);
+        $data = [
+            'Id' => $result->Id,
+            'Kleur1' => $result->Kleur1,
+            'Kleur2' => $result->Kleur2,
+            'Kleur3' => $result->Kleur3,
+            'Kleur4' => $result->Kleur4,
+            'Tel' => $result->Tel,
+            'Email' => $result->Email,
+            'Datum' => $result->Datum,
+            'Soort1' => $result->Soort1,
+            'Soort2' => $result->Soort2,
+            'Soort3' => $result->Soort3
+        ];
+        $this->view('Appointments/update', $data);
     }
 }
